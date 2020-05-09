@@ -1,3 +1,4 @@
+#Este diseño no esta en el XD, es para cuando no hayan notas
 import tkinter as tk
 from PIL import ImageTk, Image
 import tkinter.font as tkFont
