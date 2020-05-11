@@ -3,10 +3,15 @@ import json
 from tkinter.font import Font
 """EN EL JSON DE LAS NOTAS LA JERARQUIA SERA FOLDER/OBJETO DE LA NOTA"""
 
-folders = [
-    "tareas": 'nombre': 'tarea',
-    'notas':  ['APP DE NOTAS', 'PUENTE DE SPAGHETTI'], records: 'nombre': 'tarea2', 'notas':  ['APP DE NOooooooTAS', 'PUENTE D WESPAGsdadasHETH']
-]
+folders = {
+    'tarea':
+        ['nota_0 de tarea', 'nota_1 de tarea'],
+    'proyectos':
+        ['nota_0 de proyectos'],
+    'ideas':
+        []
+}
+
 
 root = Tk()
 root.geometry('360x640')
@@ -40,6 +45,11 @@ class editor(build_frames):
         super().__init__(master, title)
 
 
+def make_lists(folder):
+    l_keys = list(folder.keys())
+    l_values = list(folder.values())
+
+
 def raise_frame(frame):
     """ FUNCION DE AUXILIO PARA LEVANTAR FRAMES. """
     frame.tkraise()
@@ -47,5 +57,7 @@ def raise_frame(frame):
 
 Lista1 = listados(root, 'Folders')
 Notas = listados(root, 'Notas')
+Editor = editor(root, 'Nota')
 
+Lista1.cuadro.tkraise()
 root.mainloop()
