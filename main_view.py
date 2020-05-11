@@ -1,9 +1,9 @@
 from tkinter import *
 import json
 from tkinter.font import Font
-"""EN EL JSON DE LAS NOTAS LA JERARQUIA SERA FOLDER/OBJETO DE LA NOTA"""
+from PIL import ImageTk, Image
 
-folders = {
+FOLDERS = {
     'tarea':
         ['nota_0 de tarea', 'nota_1 de tarea'],
     'proyectos':
@@ -11,12 +11,16 @@ folders = {
     'ideas':
         []
 }
+folders_values = []
+folders_keys = []
 
 
 root = Tk()
 root.geometry('360x640')
 root.resizable(FALSE, FALSE)
 root.title('NOTAS')
+
+folder_icon = ImageTk.PhotoImage(Image.open('icon_folder.png'))
 
 
 class build_frames:
@@ -36,8 +40,25 @@ class build_frames:
 
 
 class listados(build_frames):
+    global folders_keys, folders_values, folder_icon
+
     def __init__(self, master, title):
         super().__init__(master, title)
+        make_lists(FOLDERS)
+        self.show_lists()
+
+    def show_lists(self):
+        global folders_keys, folders_values
+        for item in folders_keys:
+            self.folder_frame = Frame(self.content_frame)
+            self.folder_frame.place(relwidth=1, relheight=(1/4), anchor=NW)
+            folder_image = Button(
+                self.folder_frame, image=folder_icon, command=lambda: print('boton activado'))
+            folder_image.pack(side=LEFT)
+            folder_name = Button(self.folder_frame, text=str(item))
+            folder_name.pack(side=LEFT)
+            print(str(item))
+            print(str(folders_keys))
 
 
 class editor(build_frames):
@@ -45,19 +66,22 @@ class editor(build_frames):
         super().__init__(master, title)
 
 
-def make_lists(folder):
-    l_keys = list(folder.keys())
-    l_values = list(folder.values())
-
-
 def raise_frame(frame):
     """ FUNCION DE AUXILIO PARA LEVANTAR FRAMES. """
-    frame.tkraise()
+    frame.cuadro.tkraise()
 
 
-Lista1 = listados(root, 'Folders')
+def make_lists(folder):
+    global folders_keys, folders_values
+    folders_keys = list(folder.keys())
+    folders_values = list(folder.values())
+
+
+Lista1 = listados(root, 'FOLDERS')
 Notas = listados(root, 'Notas')
 Editor = editor(root, 'Nota')
 
-Lista1.cuadro.tkraise()
+raise_frame(Lista1)
+
+
 root.mainloop()
