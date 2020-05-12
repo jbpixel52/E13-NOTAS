@@ -3,21 +3,42 @@ import json
 from tkinter.font import Font
 from PIL import ImageTk, Image
 
+root = Tk()
+
 FOLDERS = {
     'tarea':
         ['nota_0 de tarea', 'nota_1 de tarea'],
     'proyectos':
         ['nota_0 de proyectos'],
     'ideas':
-        []
+        [],
+    'planes':
+    [],
+    'memes':
+    [],
+    'mandado':
+    [],
+    'vacacione2s': [],
+    'tar2ea':
+        ['nota_0 de tarea', 'nota_1 de tarea'],
+    'proyect2os':
+        ['nota_0 de proyectos'],
+    'ide2as':
+        [],
+    'pla1nes':
+    [],
+    'mem2es':
+    [],
+    'manda3do':
+    [],
+    'vacac1iones': [],
 }
 folders_values = []
 folders_keys = []
 
 
-root = Tk()
 root.geometry('360x640')
-root.resizable(FALSE, FALSE)
+root.resizable(TRUE, TRUE)
 root.title('NOTAS')
 
 folder_icon = ImageTk.PhotoImage(Image.open('icon_folder.png'))
@@ -34,31 +55,52 @@ class build_frames:
         self.title = Label(self.title_bar, bg='snow3',
                            text=title, font=Font(family='Comic Sans MS'))
         self.title.place(relwidth=.5, relheight=1)
+        """ self.content_frame = ScrollableFrame(self.cuadro, bg='floral white', padx=5, pady=5)"""
         self.content_frame = Frame(
-            self.cuadro, bg='floral white', padx=5, pady=5)
-        self.content_frame.place(relwidth=1.0, relheight=(3/4)-.15, rely=.25)
-
+            self.cuadro)
+        self.content_frame.place(relwidth=1.0, relheight=.6, rely=.25)
+        self.pagina =0
 
 class listados(build_frames):
     global folders_keys, folders_values, folder_icon
 
     def __init__(self, master, title):
         super().__init__(master, title)
+        self.pagina = 0
         make_lists(FOLDERS)
+
+        self.show_lists()
+        self.prev = Button(self.cuadro, text="PREV PAGE", command=self.turn_page(-1)).place(
+            anchor=NW, rely=.8)
+        self.next = Button(self.cuadro, text="NEXT PAGE", command= (self.turn_page(1))).place(
+            anchor=NW, rely=0.8, relx=.2)
+
+    def turn_page(self, direccion):
+        self.pagina +=direccion
+        self.content_frame.update()
         self.show_lists()
 
     def show_lists(self):
         global folders_keys, folders_values
-        for item in folders_keys:
-            self.folder_frame = Frame(self.content_frame)
-            self.folder_frame.place(relwidth=1, relheight=(1/4), anchor=NW)
+        placement = 0
+
+        for indice in range(len(folders_keys)):
+            item = folders_keys[indice]
+            page = 4*self.pagina
+            indice = indice + page
+
+            self.folder_frame = Frame(self.content_frame, pady=0)
+            self.folder_frame.place(rely=placement)
             folder_image = Button(
                 self.folder_frame, image=folder_icon, command=lambda: print('boton activado'))
             folder_image.pack(side=LEFT)
-            folder_name = Button(self.folder_frame, text=str(item))
+            folder_name = Button(self.folder_frame, text=str(item),)
             folder_name.pack(side=LEFT)
             print(str(item))
             print(str(folders_keys))
+            placement += (1/4)
+
+
 
 
 class editor(build_frames):

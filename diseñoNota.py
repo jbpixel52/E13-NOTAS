@@ -10,7 +10,7 @@ Nota = tk.Tk()
 Nota.title('Carpetas')
 Nota.minsize(screenSize['width'], screenSize['height'])
 Nota.resizable(False, False)
-im = ImageTk.PhotoImage( Image.open('ic_arrow_back.png').resize((24,24)) )
+im =   ImageTk.PhotoImage( Image.open('ic_arrow_back.png').resize((24,24)) )
 
 
 seccion1 = tk.Frame(master=Nota, bg="gray")
