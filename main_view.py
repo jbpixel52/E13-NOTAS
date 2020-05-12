@@ -86,7 +86,8 @@ FOLDERS = {
 }
 folders_values = []
 folders_keys = []
-
+folder_index = 0
+nota_index = 0
 
 root.geometry('360x640')
 root.resizable(FALSE, FALSE)
@@ -94,6 +95,7 @@ root.title('NOTAS')
 
 folder_icon = ImageTk.PhotoImage(Image.open('icon_folder.png'))
 note_icon = ImageTk.PhotoImage(Image.open('note.png'))
+back_icon = ImageTk.PhotoImage(Image.open('back_arrow.png'))
 
 
 class build_frames:
@@ -101,14 +103,14 @@ class build_frames:
         self.cuadro = Frame(master, bg='light goldenrod')
         self.cuadro.place(height=640, width=360, anchor=NW)
 
-        self.title_bar = Frame(self.cuadro, bg='snow3', padx=5, pady=5)
+        self.title_bar = Frame(self.cuadro, bg='gold', padx=5, pady=5)
         self.title_bar.place(relwidth=1.0, relheight=(2/9))
 
-        self.title = Label(self.title_bar, bg='snow3',
+        self.title = Label(self.title_bar, bg='gold',
                            text=title, font=Font(family='Comic Sans MS'))
         self.title.place(relwidth=.5, relheight=1)
         self.content_frame = Frame(
-            self.cuadro, bg='floral white', padx=5, pady=0)
+            self.cuadro, bg='pale goldenrod', padx=5, pady=0)
         self.content_frame.place(relwidth=1.0, relheight=.6, rely=.25)
         self.pagina = 0
 
@@ -118,9 +120,9 @@ class listados(build_frames):
 
     def __init__(self, master, title):
         super().__init__(master, title)
-        self.pagina = 0
         make_lists(FOLDERS)
 
+        self.pagina = 0
         self.show_folders()
         self.prev = Button(self.cuadro, text="PREV PAGE", command=lambda: self.turn_page(-1)).place(
             anchor=NW, rely=.8)
@@ -154,57 +156,40 @@ class listados(build_frames):
                 self.folder_frame, image=folder_icon, command=lambda: print('boton activado'))
             self.folder_image.pack(side=LEFT)
             self.folder_name = Button(self.folder_frame, text=str(
-                item), command=lambda: self.transition(int(page)))
+                item), command=lambda: print('boton activado'))
             self.folder_name.pack(side=LEFT)
 
             placement += (1/4)
             indice += 1
 
-    def transition(self, indice):
-        global folders_keys, folders_values, folder_icon, note_icon
-        placement = 0
-        Notas = listados(root, 'NOTAS')
-        make_lists(FOLDERS)
-        raise_frame(Notas)
-        Lista1.cuadro.lower()
-        unmap = self.content_frame.place_slaves()
-
-        for each in unmap:
-            each.forget()
-
-        self.lista_notas = []
-        self.lista_notas = folders_values[indice]  # esta saca la lista de las notas
-
-        for nota in self.lista_notas:
-            self.nota_f = Frame(self.content_frame, bg='floralwhite', pady=0).pack()
-            self.nota_icon = Button(self.nota_f, image=note_icon, command=lambda: print(
-                'boton activado')).pack(side=LEFT)
-            self.breve = Button(self.nota_f,
-                                text=str(nota[:len(nota)//2])).pack(side=LEFT)
-            placement += (1/4)
-
 
 class editor(build_frames):
+    global back_icon, folder_index, folders_keys, folders_values, FOLDERS
 
     def __init__(self, master, title):
         super().__init__(master, title)
-        textoNotas = "Hola"
         textoNotas2 = ""
-        self.titulo = Frame(master, bg = 'light goldenrod',relwidth=1.0, relheight=0.1).place(relx=0, rely=0)
-        self.label1 = Label(master=self.titulo,
-                        bg="gray",
-                        fg="black",
-                        text="Tituli",
-                        ).place(anchor=NW, relx=0.2, rely=0.2)
+        self.back = Button(self.title_bar, bg='gold', fg='black', image=back_icon,
+                           command=lambda: self.back_save()).pack(side=LEFT)
+        self.crear = Button(self.title_bar, bg='gold', text='Crear',
+                            padx=5, command=self.add_nota).pack(side=RIGHT)
+        self.Nota = Entry(self.content_frame, bg='light goldenrod').place(
+            relx=0, rely=.05, relwidth=.9, relheight=.9)
+        try:
+            self.Nota.insert(END, 'Hola')
+        except:
+            Exception('Nota es NoneType')
 
-        self.back = Button(master=self.titulo, bg = 'gray', text = '<-', height = 30, width = 30).place(anchor = NW, relx = 0.05, rely = 0.2)
-        self.crear = Button(master = self.titulo, bg = 'gray', text = 'Crear').place(anchor = NW, relx = 0.8, rely = 0.2)
-        self.cuerpo = Frame(master, bg = 'white', relwidth=1.0, relheight=0.8).place(relx = 0, rely = 0.2)
-        self.Nota = Entry(master = self.cuerpo, bg = 'white', height = 10)
-        self.Nota.insert(END, textoNotas)
-        self.Nota.place(relx = 0.1, rely = 0.1)
+    def add_nota(self):
+        '''ESTA FUNCION SOLO AGREGA UNA NUEVA NO LA ACTUALIZA'''
+        text_entered = self.Nota.get()
+        FOLDERS([str(folders_keys[folder_index])]).append(text_entered)
 
-
+    def back_save(self):
+        '''GUARDA LA EDICION DE LA NOTA PRESENTA.'''
+        FOLDERS([str(folders_keys[folder_index])])[
+            nota_index] = self.Nota.get()
+        editor.cuadro.lower()
 
 
 def raise_frame(frame):
@@ -218,11 +203,9 @@ def make_lists(folder):
     folders_values = list(folder.values())
 
 
+Editor = editor(root, 'Nota')
 Lista1 = listados(root, 'FOLDERS')
-"""Notas = listados(root, 'Notas')
-Editor = editor(root, 'Nota')"""
-
-raise_frame(Lista1)
-
+Notas = listados(root, 'Notas')
+raise_frame(Editor)
 
 root.mainloop()
