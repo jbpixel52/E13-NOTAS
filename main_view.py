@@ -104,8 +104,26 @@ class listados(build_frames):
 
 
 class editor(build_frames):
+
     def __init__(self, master, title):
         super().__init__(master, title)
+        textoNotas = "Hola"
+        textoNotas2 = ""
+        self.titulo = Frame(master, bg = 'light goldenrod',relwidth=1.0, relheight=0.1).place(relx=0, rely=0)
+        self.label1 = Label(master=self.titulo,
+                        bg="gray",
+                        fg="black",
+                        text="Tituli",
+                        ).place(anchor=NW, relx=0.2, rely=0.2)
+
+        self.back = Button(master=self.titulo, bg = 'gray', text = '<-', height = 30, width = 30).place(anchor = NW, relx = 0.05, rely = 0.2)
+        self.crear = Button(master = self.titulo, bg = 'gray', text = 'Crear').place(anchor = NW, relx = 0.8, rely = 0.2)
+        self.cuerpo = Frame(master, bg = 'white', relwidth=1.0, relheight=0.8).place(relx = 0, rely = 0.2)
+        self.Nota = Entry(master = self.cuerpo, bg = 'white', height = 10)
+        self.Nota.insert(END, textoNotas)
+        self.Nota.place(relx = 0.1, rely = 0.1)
+
+
 
 
 def raise_frame(frame):
