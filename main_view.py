@@ -89,7 +89,7 @@ folders_keys = []
 
 
 root.geometry('360x640')
-root.resizable(TRUE, TRUE)
+root.resizable(FALSE, FALSE)
 root.title('NOTAS')
 
 folder_icon = ImageTk.PhotoImage(Image.open('icon_folder.png'))
@@ -150,33 +150,38 @@ class listados(build_frames):
             self.folder_frame = Frame(
                 self.content_frame, bg='floral white', pady=0)
             self.folder_frame.place(rely=placement, relwidth=1/2)
-            folder_image = Button(
+            self.folder_image = Button(
                 self.folder_frame, image=folder_icon, command=lambda: print('boton activado'))
-            folder_image.pack(side=LEFT)
-            folder_name = Button(self.folder_frame, text=str(
-                item), command=lambda: self.transition(int(indice)))
-            folder_name.pack(side=LEFT)
+            self.folder_image.pack(side=LEFT)
+            self.folder_name = Button(self.folder_frame, text=str(
+                item), command=lambda: self.transition(int(page)))
+            self.folder_name.pack(side=LEFT)
 
             placement += (1/4)
             indice += 1
 
     def transition(self, indice):
-        make_lists(FOLDERS)
-
         global folders_keys, folders_values, folder_icon, note_icon
         placement = 0
+        Notas = listados(root, 'NOTAS')
+        make_lists(FOLDERS)
+        raise_frame(Notas)
+        Lista1.cuadro.lower()
+        unmap = self.content_frame.place_slaves()
 
-        Notas = listados(root, folders_keys[indice])
-        lista_notas = folders_keys[indice]  # esta saca la lista de las notas
+        for each in unmap:
+            each.forget()
 
-        for nota in lista_notas:
-            self.nota_f = Frame(self.content_frame, bg='floralwhite', pady=0).place(
-                rely=placement, relwidth=3/4)
+        self.lista_notas = []
+        self.lista_notas = folders_values[indice]  # esta saca la lista de las notas
+
+        for nota in self.lista_notas:
+            self.nota_f = Frame(self.content_frame, bg='floralwhite', pady=0).pack()
             self.nota_icon = Button(self.nota_f, image=note_icon, command=lambda: print(
                 'boton activado')).pack(side=LEFT)
-            self.breve = Button(self.nota_f,Font="Comic Sans MS",text=str(nota[:5])).pack(side=LEFT)
+            self.breve = Button(self.nota_f,
+                                text=str(nota[:len(nota)//2])).pack(side=LEFT)
             placement += (1/4)
-        raise_frame(Notas)
 
 
 class editor(build_frames):

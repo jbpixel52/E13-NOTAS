@@ -1,1 +1,1 @@
-show_folders
+lista_notas
