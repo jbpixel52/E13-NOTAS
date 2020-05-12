@@ -18,20 +18,71 @@ FOLDERS = {
     [],
     'mandado':
     [],
-    'vacacione2s': [],
+    'vacadacione2s': [],
     'tar2ea':
         ['nota_0 de tarea', 'nota_1 de tarea'],
-    'proyect2os':
+    'dproyect2os':
         ['nota_0 de proyectos'],
     'ide2as':
         [],
-    'pla1nes':
+    'pla1dsadsandases':
     [],
     'mem2es':
     [],
-    'manda3do':
+    'mandaas3do':
     [],
-    'vacac1iones': [],
+    'vacac1iodanes': [],
+    'tar2ea':
+        ['nota_0 de tarea', 'nota_1 de tarea'],
+    'proyecast2os':
+        ['nota_0 de proyectos'],
+    'ide2as':
+        [],
+    'pla1ncfzsaes':
+    [],
+    'mexcm2es':
+    [],
+    'mandazx3do':
+    [],
+    'vacacx1iones': [],
+    'tar2xea':
+        ['nota_0 de tarea', 'nota_1 de tarea'],
+    'proyevcxctx2os':
+        ['nota_0 de proyectos'],
+    'idxe2as':
+        [],
+    'pla1cznxs':
+    [],
+    'mem2 zcx eas':
+    [],
+    'mandaczx 3ado':
+    [],
+    'vacac1ia cxzones': [],
+    'tar2ea':
+        ['nota_0 de tarea', 'nota_1 de tarea'],
+    'proyectzxc2os':
+        ['nota_0 de proyectos'],
+    'idasde2as':
+        [],
+    'pla1nfdeas':
+    [],
+    'mem2easas':
+    [],
+    'mandasda3ado':
+    [], 'aes': [],
+    'tasar2ea':
+        ['nota_0 de tarea', 'nota_1 de tarea'],
+    'prosadyeact2os':
+        ['nota_0 de proyectos'],
+    'idasea2as':
+        [],
+    'pla1anefs':
+    [],
+    'mem2aseas':
+    [],
+    'mandaas3ado':
+    [],
+    'vacac1ia ones': []
 }
 folders_values = []
 folders_keys = []
@@ -42,6 +93,7 @@ root.resizable(TRUE, TRUE)
 root.title('NOTAS')
 
 folder_icon = ImageTk.PhotoImage(Image.open('icon_folder.png'))
+note_icon = ImageTk.PhotoImage(Image.open('note.png'))
 
 
 class build_frames:
@@ -55,11 +107,11 @@ class build_frames:
         self.title = Label(self.title_bar, bg='snow3',
                            text=title, font=Font(family='Comic Sans MS'))
         self.title.place(relwidth=.5, relheight=1)
-        """ self.content_frame = ScrollableFrame(self.cuadro, bg='floral white', padx=5, pady=5)"""
         self.content_frame = Frame(
-            self.cuadro)
+            self.cuadro, bg='floral white', padx=5, pady=0)
         self.content_frame.place(relwidth=1.0, relheight=.6, rely=.25)
-        self.pagina =0
+        self.pagina = 0
+
 
 class listados(build_frames):
     global folders_keys, folders_values, folder_icon
@@ -69,38 +121,62 @@ class listados(build_frames):
         self.pagina = 0
         make_lists(FOLDERS)
 
-        self.show_lists()
-        self.prev = Button(self.cuadro, text="PREV PAGE", command=self.turn_page(-1)).place(
+        self.show_folders()
+        self.prev = Button(self.cuadro, text="PREV PAGE", command=lambda: self.turn_page(-1)).place(
             anchor=NW, rely=.8)
-        self.next = Button(self.cuadro, text="NEXT PAGE", command= (self.turn_page(1))).place(
+        self.next = Button(self.cuadro, text="NEXT PAGE", command=lambda: self.turn_page(1)).place(
             anchor=NW, rely=0.8, relx=.2)
 
     def turn_page(self, direccion):
-        self.pagina +=direccion
-        self.content_frame.update()
-        self.show_lists()
+        if (self.pagina > len(folders_keys)//4) or (self.pagina == -1):
+            self.pagina = 0
+        else:
+            self.pagina += direccion
 
-    def show_lists(self):
+        self.content_frame.update()
+        self.show_folders()
+        print(self.pagina)
+
+    def show_folders(self):
         global folders_keys, folders_values
         placement = 0
+        indice = 0
+        while indice < len(folders_keys):
 
-        for indice in range(len(folders_keys)):
             item = folders_keys[indice]
             page = 4*self.pagina
             indice = indice + page
 
-            self.folder_frame = Frame(self.content_frame, pady=0)
-            self.folder_frame.place(rely=placement)
+            self.folder_frame = Frame(
+                self.content_frame, bg='floral white', pady=0)
+            self.folder_frame.place(rely=placement, relwidth=1/2)
             folder_image = Button(
                 self.folder_frame, image=folder_icon, command=lambda: print('boton activado'))
             folder_image.pack(side=LEFT)
-            folder_name = Button(self.folder_frame, text=str(item),)
+            folder_name = Button(self.folder_frame, text=str(
+                item), command=lambda: self.transition(int(indice)))
             folder_name.pack(side=LEFT)
-            print(str(item))
-            print(str(folders_keys))
+
             placement += (1/4)
+            indice += 1
 
+    def transition(self, indice):
+        make_lists(FOLDERS)
 
+        global folders_keys, folders_values, folder_icon, note_icon
+        placement = 0
+
+        Notas = listados(root, folders_keys[indice])
+        lista_notas = folders_keys[indice]  # esta saca la lista de las notas
+
+        for nota in lista_notas:
+            self.nota_f = Frame(self.content_frame, bg='floralwhite', pady=0).place(
+                rely=placement, relwidth=3/4)
+            self.nota_icon = Button(self.nota_f, image=note_icon, command=lambda: print(
+                'boton activado')).pack(side=LEFT)
+            self.breve = Button(self.nota_f,Font="Comic Sans MS",text=str(nota[:5])).pack(side=LEFT)
+            placement += (1/4)
+        raise_frame(Notas)
 
 
 class editor(build_frames):
@@ -120,8 +196,8 @@ def make_lists(folder):
 
 
 Lista1 = listados(root, 'FOLDERS')
-Notas = listados(root, 'Notas')
-Editor = editor(root, 'Nota')
+"""Notas = listados(root, 'Notas')
+Editor = editor(root, 'Nota')"""
 
 raise_frame(Lista1)
 
